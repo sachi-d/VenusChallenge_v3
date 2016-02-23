@@ -44,6 +44,7 @@ namespace VenusGame
         Texture2D op3Texture;
         Texture2D op4Texture;
         Texture2D bulletTexture;
+        SpriteFont font1;
 
         int screenWidth = 1200; //FIXED BACKGROUND WIDTH
         int screenHeight = 675;   //FIXED BACKGROUNDHEIGHT
@@ -54,6 +55,7 @@ namespace VenusGame
 
         GameGrid gamegrid;
         Vector2 rotationpoint = new Vector2(30, 30);
+        String displayText=" ";
 
         internal GameGrid Gamegrid
         {
@@ -123,6 +125,7 @@ namespace VenusGame
             op3Texture = Content.Load<Texture2D>("op3");
             op4Texture = Content.Load<Texture2D>("op4");
             bulletTexture = Content.Load<Texture2D>("bullet");
+            font1 = Content.Load<SpriteFont>("Myfont");
             //gamegrid.mytank.angle = 0;
             //screenWidth = device.PresentationParameters.BackBufferWidth;
             //screenHeight = device.PresentationParameters.BackBufferHeight;
@@ -174,6 +177,7 @@ namespace VenusGame
             spriteBatch.Begin();
             DrawScenery();
             DrawCells();
+            DrawText();
             //DrawBullets();
             //DrawBars();
 
@@ -192,7 +196,15 @@ namespace VenusGame
             spriteBatch.Draw(tex, position, null, Color.White, t.angle, rotationpoint, 1, SpriteEffects.None, 1);
 
         }
-        public void readMessage(String m) { gamegrid.readServerMessage(m); }
+        private void DrawText()
+        {
+            spriteBatch.DrawString(font1, displayText, new Vector2(29, 595), Color.Black);
+            //spriteBatch.DrawString(font, "Cannon power: 100", new Vector2(20, 45), Color.White);
+        }
+        public void readMessage(String m)
+        {
+            displayText=gamegrid.readServerMessage(m);
+        }
 
         private void DrawScenery()
         {

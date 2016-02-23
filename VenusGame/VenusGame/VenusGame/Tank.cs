@@ -20,7 +20,7 @@ namespace VenusGame
         public int direction;
         public Vector2 dirpos;
         GameGrid grid;//the game grid this tank belongs to
-        String respond;
+        //String respond;
         public Tank()
             : base()
         {
@@ -30,8 +30,7 @@ namespace VenusGame
             whetherShot = false;
             health = 0;
             status = true;
-            respond = "";
-
+           
         }
         public Tank(String l)
             : base()
@@ -42,7 +41,6 @@ namespace VenusGame
             whetherShot = false;
             health = 0;
             status = true;
-            respond = "";
             playerName = l;
 
         }
@@ -231,71 +229,7 @@ namespace VenusGame
                 setDirection(todirection);
             }
         }
-        public String respondCommands(String x)
-        {
-            x = x.Split('#')[0];
-            if (x == "OBSTACLE")
-            {
-                respond = "Obstacle found in moved direction";
-                Console.WriteLine(respond);
-                return respond;
-            }
-            else if (x == "CELL_OCCUPIED")
-            {
-                respond = "Tried to move to a occupied cell";
-                Console.WriteLine(respond);
-                return respond;
-            }
-            else if (x == "DEAD")
-            {
-                respond = "Player dead";
-                Console.WriteLine(respond);
-                return respond;
-            }
-            else if (x == "TOO_QUICK")
-            {
-                respond = "Slow down movements";
-                Console.WriteLine(respond);
-                return respond;
-            }
-            else if (x == "INVALID_CELL")
-            {
-                respond = "Not a valid cell";
-                Console.WriteLine(respond);
-                return respond;
-            }
-            else if (x == "GAME_HAS_FINISHED")
-            {
-                respond = "Game end";
-                Console.WriteLine(respond);
-                return respond;
-            }
-            else if (x == "PITFALL")
-            {
-                respond = "Pitfall - Game end";
-                Console.WriteLine(respond);
-                return respond;
-            }
-            else if (x == "GAME_NOT_STARTED_YET")
-            {
-                respond = "Wait!Game will start in few seconds ";
-                Console.WriteLine(respond);
-                return respond;
-            }
-            else if (x == "NOT_A_VALID_CONTESTANT")
-            {
-                respond = "Only valid contestants are allowed";
-                Console.WriteLine(respond);
-                return respond;
-            }
-            else
-            {
-                respond = "Not a valid respond";
-                // Console.WriteLine("Not a valid respond");
-                return respond;
-
-            }
-        }
+        
 
         public override string ToString()
         {

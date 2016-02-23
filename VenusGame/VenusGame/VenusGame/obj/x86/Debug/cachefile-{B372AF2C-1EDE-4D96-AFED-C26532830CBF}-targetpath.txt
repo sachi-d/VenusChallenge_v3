@@ -17,3 +17,4 @@ Content\op4.xnb
 Content\stone.xnb
 Content\tank.xnb
 Content\water.xnb
+Content\Myfont.xnb

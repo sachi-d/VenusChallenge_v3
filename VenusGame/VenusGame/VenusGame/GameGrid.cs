@@ -124,7 +124,7 @@ namespace VenusGame
             //Console.Write(updatedValues);
             //Console.WriteLine("damage levs- " + c[c.Length - 1]);
             updateDamages(c[c.Length - 1]);
-           // IDictionary<string, Tank> col = new Dictionary<string, Tank>();
+            // IDictionary<string, Tank> col = new Dictionary<string, Tank>();
             for (int i = 0; i < c.Length - 2; i++)
             {
                 string[] cl = c[i + 1].Split(';');
@@ -133,7 +133,7 @@ namespace VenusGame
                 tankList[i].setPlayerDigit(i);
                 tankList[i].setDirection(Int32.Parse(cl[2]));
                 tankList[i].setGridLocation(x, y);
-                
+
             }
             tankList.ToArray();
         }
@@ -235,8 +235,9 @@ namespace VenusGame
             }
 
         }
-        public void readServerMessage(string message)
+        public String readServerMessage(string message)
         {
+            String res = "";
             if (message[0] == 'S')
             {
                 //Console.Write("Joined the game\n");
@@ -265,9 +266,80 @@ namespace VenusGame
                 //Console.Write("life packs!! \n");
                 getLifePacksDetails(message);
             }
+            else
+            {
+                res=respondCommands(message);
+            }
             Console.WriteLine("----------------" + message + "-----------------");
             this.displayGrid();
+            return res;
+        }
 
+        public String respondCommands(String x)
+        {
+            String respond;
+            x = x.Split('#')[0];
+            if (x == "OBSTACLE")
+            {
+                respond = "Obstacle found!";
+                Console.WriteLine(respond);
+                return respond;
+            }
+            else if (x == "CELL_OCCUPIED")
+            {
+                respond = "Occupied cell!";
+                Console.WriteLine(respond);
+                return respond;
+            }
+            else if (x == "DEAD")
+            {
+                respond = "Player dead!";
+                Console.WriteLine(respond);
+                return respond;
+            }
+            else if (x == "TOO_QUICK")
+            {
+                respond = "WHOA! Slow down!";
+                Console.WriteLine(respond);
+                return respond;
+            }
+            else if (x == "INVALID_CELL")
+            {
+                respond = "Not a valid cell";
+                Console.WriteLine(respond);
+                return respond;
+            }
+            else if (x == "GAME_HAS_FINISHED")
+            {
+                respond = "Game end";
+                Console.WriteLine(respond);
+                return respond;
+            }
+            else if (x == "PITFALL")
+            {
+                respond = "Pitfall - Game end";
+                Console.WriteLine(respond);
+                return respond;
+            }
+            else if (x == "GAME_NOT_STARTED_YET")
+            {
+                respond = "Game will start soon";
+                Console.WriteLine(respond);
+                return respond;
+            }
+            else if (x == "NOT_A_VALID_CONTESTANT")
+            {
+                respond = "Not a valid contestant";
+                Console.WriteLine(respond);
+                return respond;
+            }
+            else
+            {
+                respond = "";
+                // Console.WriteLine("Not a valid respond");
+                return respond;
+
+            }
         }
     }
 
