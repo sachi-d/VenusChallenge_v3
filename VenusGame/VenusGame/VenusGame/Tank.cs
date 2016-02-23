@@ -114,6 +114,7 @@ namespace VenusGame
             if (!(newx < 0 || newx > 9 || newy > 9 || newy < 0))
             {
                 grid.GetGrid()[newx, newy] = this;
+                Console.WriteLine("NEW X NEW Y OF TANK-----" +this.getPlayerDigit());
             }
             if (!(prex < 0 || prex > 9 || prey > 9 || prey < 0))
             {
@@ -121,6 +122,7 @@ namespace VenusGame
             }
             x = newx;
             y = newy;
+            
         }
         public void globalUpdate(String updatedValues)
         {
@@ -235,55 +237,55 @@ namespace VenusGame
             if (x == "OBSTACLE")
             {
                 respond = "Obstacle found in moved direction";
-                Console.WriteLine("Obstacle found in moved direction");
+                Console.WriteLine(respond);
                 return respond;
             }
             else if (x == "CELL_OCCUPIED")
             {
                 respond = "Tried to move to a occupied cell";
-                Console.WriteLine("Tried to move to a occupied cell");
+                Console.WriteLine(respond);
                 return respond;
             }
             else if (x == "DEAD")
             {
                 respond = "Player dead";
-                Console.WriteLine("Player dead");
+                Console.WriteLine(respond);
                 return respond;
             }
             else if (x == "TOO_QUICK")
             {
                 respond = "Slow down movements";
-                Console.WriteLine("Slow down movements");
+                Console.WriteLine(respond);
                 return respond;
             }
             else if (x == "INVALID_CELL")
             {
                 respond = "Not a valid cell";
-                Console.WriteLine("Not a valid cell");
+                Console.WriteLine(respond);
                 return respond;
             }
             else if (x == "GAME_HAS_FINISHED")
             {
                 respond = "Game end";
-                Console.WriteLine("Game end");
+                Console.WriteLine(respond);
                 return respond;
             }
             else if (x == "PITFALL")
             {
                 respond = "Pitfall - Game end";
-                Console.WriteLine("Pitfall - Game end");
+                Console.WriteLine(respond);
                 return respond;
             }
             else if (x == "GAME_NOT_STARTED_YET")
             {
                 respond = "Wait!Game will start in few seconds ";
-                Console.WriteLine("Wait!Game will start in few seconds ");
+                Console.WriteLine(respond);
                 return respond;
             }
             else if (x == "NOT_A_VALID_CONTESTANT")
             {
                 respond = "Only valid contestants are allowed";
-                Console.WriteLine("Only valid contestants are allowed");
+                Console.WriteLine(respond);
                 return respond;
             }
             else
@@ -302,6 +304,10 @@ namespace VenusGame
         public int getPlayerDigit()
         {
             return Int32.Parse(this.playerName);
+        }
+        public void setPlayerDigit(int a)
+        {
+            this.playerName = a.ToString();
         }
 
     }

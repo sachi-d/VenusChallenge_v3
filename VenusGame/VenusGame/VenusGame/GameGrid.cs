@@ -124,20 +124,18 @@ namespace VenusGame
             //Console.Write(updatedValues);
             //Console.WriteLine("damage levs- " + c[c.Length - 1]);
             updateDamages(c[c.Length - 1]);
-            IDictionary<string, Tank> col = new Dictionary<string, Tank>();
+           // IDictionary<string, Tank> col = new Dictionary<string, Tank>();
             for (int i = 0; i < c.Length - 2; i++)
             {
                 string[] cl = c[i + 1].Split(';');
                 x = Int32.Parse(cl[1].ElementAt(0).ToString());
                 y = Int32.Parse(cl[1].ElementAt(2).ToString());
-
+                tankList[i].setPlayerDigit(i);
                 tankList[i].setDirection(Int32.Parse(cl[2]));
                 tankList[i].setGridLocation(x, y);
-
+                
             }
             tankList.ToArray();
-
-
         }
 
         public void updateDamages(string command)

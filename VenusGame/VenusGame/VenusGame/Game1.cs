@@ -292,6 +292,7 @@ namespace VenusGame
                             tex = op4Texture;
                             DrawTank(gamegrid.TankList[4], tex);
                         }
+                        //Console.WriteLine("Subfield---------------------" + subfield+" m======"+m);
                         continue;
                     }
                     else

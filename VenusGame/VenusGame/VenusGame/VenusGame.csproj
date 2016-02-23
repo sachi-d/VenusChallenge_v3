@@ -84,7 +84,6 @@
       <DependentUpon>Client2.cs</DependentUpon>
     </Compile>
     <Compile Include="Coin.cs" />
-    <Compile Include="fdf.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

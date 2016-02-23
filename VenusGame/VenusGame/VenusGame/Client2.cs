@@ -214,7 +214,9 @@ namespace VenusGame
             {
                 aiNew = new AI(game, this);
                 checkBox1.Enabled = false;
+                this.Visible = false;
             }
+            
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -232,6 +234,7 @@ namespace VenusGame
         private void button2_Click(object sender, EventArgs e)
         {
           //  Process.Start("http://venuschallenge.esy.es/");
+            System.Diagnostics.Process.Start("http://venuschallenge.esy.es/");
         }
 
       
