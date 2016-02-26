@@ -26,12 +26,15 @@ namespace VenusGame
         List<GameEntity> final;
         Random rnd;
         bool county;
+        String previous;
         String h;
+        int firstTime;
+        Boolean finish;
         public AI(Game1 g, Client2 cli)
         {
 
             this._pingTimer = new Timer();
-            this._pingTimer.Interval = 100;
+            this._pingTimer.Interval = 200;
             this._pingTimer.Elapsed += new ElapsedEventHandler(this.TimeElapsed);
 
             //trial run
@@ -47,6 +50,8 @@ namespace VenusGame
             count = 0;
             score = 0;
             county = true;
+            finish = false;
+            firstTime = 1;
             cell = new GameEntity();
             Random rnd = new Random();
         }
@@ -76,62 +81,96 @@ namespace VenusGame
 
         public void TimeElapsed(Object sender, ElapsedEventArgs eventArgs)
         {
-
-            List<GameEntity> result = new List<GameEntity>();
-            result = GetBestScore();
-
-            if (result[0].x.Equals(result[1].x))
+            if ((finish) || (firstTime == 1))
             {
-                if (result[0].y > result[1].y)
+                firstTime++;
+                if (county)
                 {
+                    List<GameEntity> result = new List<GameEntity>();
+                    result = GetBestScore();
 
-
-                    if (tank.direction != 0)
+                    if ((result[0].x.Equals(result[1].x)) && (result[0].y < result[1].y))
                     {
-                        county = false;
-                        client.SendData("UP#");
+                        if (tank.direction == 0)
+                        {
+                            county = true;
+                            previous = null;
+                            client.SendData("UP#");
+                        }
+                        else
+                        {
+                            county = false;
+                            previous = "UP#";
+                            client.SendData("UP#");
+                        }
                     }
-                    //  client.SendData("UP#");
-                    // client.startSend("UP#");
+                    else if ((result[0].x.Equals(result[1].x)) && (result[0].y > result[1].y))
+                    {
+                        if (tank.direction == 1)
+                        {
+                            county = true;
+                            previous = null;
+                            client.SendData("DOWN#");
+                        }
+                        else
+                        {
+                            county = false;
+                            previous = "DOWN#";
+                            client.SendData("DOWN#");
+                        }
+                    }
+                    else if ((result[0].y.Equals(result[1].y)) && (result[0].x < result[1].x))
+                    {
+                        if (tank.direction == 2)
+                        {
+                            county = true;
+                            previous = null;
+                            client.SendData("RIGHT#");
+                        }
+                        else
+                        {
+                            county = false;
+                            previous = "RIGHT#";
+                            client.SendData("RIGHT#");
+
+                        }
+                    }
+                    else if ((result[0].y.Equals(result[1].y)) && (result[0].x > result[1].x))
+                    {
+                        if (tank.direction == 3)
+                        {
+                            county = true;
+                            previous = null;
+                            client.SendData("LEFT#");
+                        }
+                        else
+                        {
+                            county = false;
+                            previous = "LEFT#";
+                            client.SendData("LEFT#");
+
+                        }
+                    }
+
+
+
+
+                    Console.WriteLine(tank.x + " " + tank.y);
+
+                    //     grid.GetGrid()[cell.x, cell.y] = tank;
+                    //    grid.GetGrid()[cell.x, cell.y] = tank;
+
+                    //   Console.WriteLine(this.Iterate(startNode, int.MaxValue, int.MinValue, MaxPlayer)+"Final Score");
                 }
                 else
                 {
-                    if (tank.direction != 2)
-                    {
-                        client.SendData("DOWN#");
-                    }
-                    //  client.SendData("DOWN#");
-
-                    //client.startSend("DOWN#");
+                    client.SendData(previous);
                 }
             }
-            else if ((result[0].y).Equals(result[1].y))
+            else
             {
-                if (result[0].x > result[1].x)
-                {
-                    if (tank.direction != 1)
-                    {
-                        client.SendData("RIGHT#");
-                    }
-                    //  client.SendData("RIGHT#");
-                    //client.startSend("RIGHT#");
-                }
-                else
-                {
-                    if (tank.direction != 3)
-                    {
-                        client.SendData("LEFT#");
-                    }
-                    //client.SendData("LEFT#");
-                    // client.startSend("LEFT#");
-                }
+
             }
-            Console.WriteLine(tank.x + " " + tank.y);
-
-            //     grid.GetGrid()[cell.x, cell.y] = tank;
-            //    grid.GetGrid()[cell.x, cell.y] = tank;
-
-            //   Console.WriteLine(this.Iterate(startNode, int.MaxValue, int.MinValue, MaxPlayer)+"Final Score");
         }
         public List<GameEntity> Children()
         {
@@ -159,10 +198,9 @@ namespace VenusGame
                             Console.WriteLine(grid.GetGrid()[i, j].returnObj(i, j).x + " " + grid.GetGrid()[i, j].returnObj(i, j).y + "child");
                             children.Add(grid.GetGrid()[i, j].returnObj(i, j));
                         }
-                        else
-                        {
-                            emptyCells.Add(grid.GetGrid()[i, j].returnObj(i, j));
-                        }
+
+                        emptyCells.Add(grid.GetGrid()[i, j].returnObj(i, j));
+
                     }
                     else if (grid.GetGrid()[i, j].ToString().Substring(0, 2).Equals("PP"))
                     {
@@ -186,8 +224,16 @@ namespace VenusGame
             final = new List<GameEntity>();
             GameEntity cellprev = new GameEntity();
             int bestScore = 0;
-            cellprev = cell;
+            if (firstTime == 1)
+            {
+                cellprev = null;
+            }
+            else
+            {
+                cellprev = cell;
+            }
             final.Add(cellprev);
+
             List<GameEntity> ne;
             ne = Children();
             for (int o = 0; o < ne.Count; o++)
@@ -211,15 +257,18 @@ namespace VenusGame
 
 
             }
+            score = bestScore;
             if ((cell.x.Equals(cellprev.x)) && (cell.y.Equals(cellprev.y)))
             {
                 Console.WriteLine("Blah Blah Blah");
                 int r = rnd.Next(ne.Count);
                 cell = ne[r];
+                score = 500;
             }
-            score = bestScore;
+
             final.Add(cell);
             Console.WriteLine("best score" + bestScore);
+            finish = true;
             return final;
 
         }
@@ -234,7 +283,6 @@ namespace VenusGame
                 for (int j = 0; j < 10; j++)
                 {
                     Console.WriteLine("tank.x" + tank.x + " " + "tank.y" + tank.y + "node.x" + node.x + " " + "node.y" + node.y);
-
                     foreach (GameEntity c in tankList)
                     {
                         if (node.x == c.x || node.y == c.y)
@@ -245,9 +293,9 @@ namespace VenusGame
 
 
                     }
-                    if (emptyCells.Contains(grid.GetGrid()[i, j].returnObj(i, j)))
+                    if (emptyCells.Contains(grid.GetGrid()[i, j].returnObj(i, j)) && grid.GetGrid()[i, j].returnObj(i, j).GetType() != typeof(MyTank))
                     {
-                        if ((i == node.x && i == node.x) || (j == node.y && j == node.y))
+                        if ((i == node.x && j == node.y))
                         {
 
                             if (grid.GetGrid()[i, j].GetType() == typeof(LifePack))
@@ -265,7 +313,7 @@ namespace VenusGame
                         }
 
 
-                        if ((i <= node.x + 1 && i >= node.x - 1) || (j <= node.y + 1 && j >= node.y - 1))
+                        else if ((i <= node.x + 1 && i >= node.x - 1) || (j <= node.y + 1 && j >= node.y - 1))
                         {
 
                             if (grid.GetGrid()[i, j].GetType() == typeof(LifePack))
@@ -276,6 +324,23 @@ namespace VenusGame
                             {
                                 scoreChild += 730;
                             }
+                            else if (grid.GetGrid()[i, j].GetType() == typeof(Water))
+                            {
+                                scoreChild -= 700;
+                            }
+                            else if (grid.GetGrid()[i, j].GetType() == typeof(Brick))
+                            {
+                                scoreChild -= 230;
+                            }
+                            else if (grid.GetGrid()[i, j].GetType() == typeof(Stone))
+                            {
+                                scoreChild -= 230;
+                            }
+                            else if (grid.GetGrid()[i, j].GetType() == typeof(MyTank))
+                            {
+                                scoreChild -= 700;
+                            }
+
                             else
                             {
                                 scoreChild += 600;
@@ -295,31 +360,55 @@ namespace VenusGame
                             {
                                 scoreChild += 630;
                             }
+                            else if (grid.GetGrid()[i, j].GetType() == typeof(Water))
+                            {
+                                scoreChild -= 650;
+                            }
+                            else if (grid.GetGrid()[i, j].GetType() == typeof(Brick))
+                            {
+                                scoreChild -= 130;
+                            }
+                            else if (grid.GetGrid()[i, j].GetType() == typeof(Stone))
+                            {
+                                scoreChild -= 130;
+                            }
                             else
                             {
                                 scoreChild += 500;
                             }
 
                         }
-                        else if ((i <= node.x + 3 && i >= node.x - 3) || (j <= node.y + 3 && j >= node.y - 3))
-                        {
+                        //else if ((i <= node.x + 3 && i >= node.x - 3) || (j <= node.y + 3 && j >= node.y - 3))
+                        //{
 
 
-                            if (grid.GetGrid()[i, j].GetType() == typeof(LifePack))
-                            {
-                                scoreChild += 580;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Coin))
-                            {
-                                scoreChild += 540;
-                            }
-                            else
-                            {
-                                scoreChild += 400;
-                            }
+                        //    if (grid.GetGrid()[i, j].GetType() == typeof(LifePack))
+                        //    {
+                        //        scoreChild += 580;
+                        //    }
+                        //    else if (grid.GetGrid()[i, j].GetType() == typeof(Coin))
+                        //    {
+                        //        scoreChild += 540;
+                        //    }
+                        //    else if (grid.GetGrid()[i, j].GetType() == typeof(Water))
+                        //    {
+                        //        scoreChild -= 530;
+                        //    }
+                        //    else if (grid.GetGrid()[i, j].GetType() == typeof(Brick))
+                        //    {
+                        //        scoreChild -= 40;
+                        //    }
+                        //    else if (grid.GetGrid()[i, j].GetType() == typeof(Stone))
+                        //    {
+                        //        scoreChild -= 40;
+                        //    }
+                        //    else
+                        //    {
+                        //        scoreChild += 400;
+                        //    }
 
 
-                        }
+                        //}
 
                         else
                         {
@@ -332,6 +421,18 @@ namespace VenusGame
                             else if (grid.GetGrid()[i, j].GetType() == typeof(Coin))
                             {
                                 scoreChild += 420;
+                            }
+                            else if (grid.GetGrid()[i, j].GetType() == typeof(Water))
+                            {
+                                scoreChild -= 430;
+                            }
+                            else if (grid.GetGrid()[i, j].GetType() == typeof(Brick))
+                            {
+                                scoreChild += 80;
+                            }
+                            else if (grid.GetGrid()[i, j].GetType() == typeof(Stone))
+                            {
+                                scoreChild += 80;
                             }
                             else
                             {
