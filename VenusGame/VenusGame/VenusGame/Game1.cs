@@ -55,7 +55,7 @@ namespace VenusGame
 
         GameGrid gamegrid;
         Vector2 rotationpoint = new Vector2(30, 30);
-        String displayText=" ";
+        String displayText = " ";
 
         internal GameGrid Gamegrid
         {
@@ -203,7 +203,7 @@ namespace VenusGame
         }
         public void readMessage(String m)
         {
-            displayText=gamegrid.readServerMessage(m);
+            displayText = gamegrid.readServerMessage(m);
         }
 
         private void DrawScenery()
@@ -230,87 +230,158 @@ namespace VenusGame
                     //Console.WriteLine("iiiiiiiiiiiiiiiiiiiiii" + m.ToString());
 
                     string field = m.ToString().Substring(0, 2);
-                    if (field.Equals("BB"))
+                    switch (field)
                     {
-                        Brick b = (Brick)m;
-                        if (b.getHealth() == 1)
-                        {
-                            tex = brick1Texture;
-                        }
-                        else if (b.getHealth() == 2)
-                        {
-                            tex = brick2Texture;
-                        }
-                        else if (b.getHealth() == 3)
-                        {
-                            tex = brick3Texture;
-                        }
-                        else if (b.getHealth() == 4)
-                        {
+                        case "BB":
+                            Brick b = (Brick)m;
+                            int hel = b.getHealth();
+                            switch (hel)
+                            {
+                                case 1:
+                                    tex = brick1Texture;
+                                    break;
+                                case 2:
+                                    tex = brick2Texture;
+                                    break;
+                                case 3:
+                                    tex = brick3Texture;
+                                    break;
+                                case 4:
+                                    tex = cellTexture;
+                                    break;
+                                default:
+                                    tex = brickTexture;
+                                    break;
+                            }
+                            break;
+                        case "SS":
+                            tex = stoneTexture;
+                            break;
+                        case "WW":
+                            tex = waterTexture;
+                            break;
+                        case "CC":
+                            tex = coinTexture;
+                            break;
+                        case "LP":
+                            tex = lifepackTexture;
+                            break;
+                        case "PP":
+                            string subfield = m.ToString().Substring(2, 1);
+                            switch (subfield)
+                            {
+                                case "M":
+                                    tex = tankTexture;
+                                    DrawTank(gamegrid.mytank, tex);
+                                    break;
+                                case "0":
+                                    tex = op0Texture;
+                                    DrawTank(gamegrid.TankList[0], tex);
+                                    break;
+                                case "1":
+                                    tex = op1Texture;
+                                    DrawTank(gamegrid.TankList[1], tex);
+                                    break;
+                                case "2":
+                                    tex = op2Texture;
+                                    DrawTank(gamegrid.TankList[2], tex);
+                                    break;
+                                case "3":
+                                    tex = op3Texture;
+                                    DrawTank(gamegrid.TankList[3], tex);
+                                    break;
+                                case "4":
+                                    tex = op4Texture;
+                                    DrawTank(gamegrid.TankList[4], tex);
+                                    break;
+                            }
+                            continue;
+                        default:
                             tex = cellTexture;
-                        }
-                        else
-                        {
-                            tex = brickTexture;
-                        }
+                            break;
 
                     }
-                    else if (field.Equals("SS"))
-                    {
-                        tex = stoneTexture;
-                    }
-                    else if (field.Equals("WW"))
-                    {
-                        tex = waterTexture;
-                    }
-                    else if (field.Equals("CC"))
-                    {
-                        tex = coinTexture;
-                    }
-                    else if (field.Equals("LP"))
-                    {
-                        tex = lifepackTexture;
-                    }
-                    else if (field.Equals("PP"))
-                    {
-                        string subfield = m.ToString().Substring(2, 1);
-                        if (subfield.Equals("M"))
-                        {
-                            tex = tankTexture;
-                            DrawTank(gamegrid.mytank, tex);
-                        }
-                        else if (subfield.Equals("0"))
-                        {
-                            tex = op0Texture;
-                            DrawTank(gamegrid.TankList[0], tex);
-                        }
-                        else if (subfield.Equals("1"))
-                        {
-                            tex = op1Texture;
-                            DrawTank(gamegrid.TankList[1], tex);
-                        }
-                        else if (subfield.Equals("2"))
-                        {
-                            tex = op2Texture;
-                            DrawTank(gamegrid.TankList[2], tex);
-                        }
-                        else if (subfield.Equals("3"))
-                        {
-                            tex = op3Texture;
-                            DrawTank(gamegrid.TankList[3], tex);
-                        }
-                        else if (subfield.Equals("4"))
-                        {
-                            tex = op4Texture;
-                            DrawTank(gamegrid.TankList[4], tex);
-                        }
-                        //Console.WriteLine("Subfield---------------------" + subfield+" m======"+m);
-                        continue;
-                    }
-                    else
-                    {
-                        tex = cellTexture;
-                    }
+                    //if (field.Equals("BB"))
+                    //{
+                    //    Brick b = (Brick)m;
+                    //    if (b.getHealth() == 1)
+                    //    {
+                    //        tex = brick1Texture;
+                    //    }
+                    //    else if (b.getHealth() == 2)
+                    //    {
+                    //        tex = brick2Texture;
+                    //    }
+                    //    else if (b.getHealth() == 3)
+                    //    {
+                    //        tex = brick3Texture;
+                    //    }
+                    //    else if (b.getHealth() == 4)
+                    //    {
+                    //        tex = cellTexture;
+                    //    }
+                    //    else
+                    //    {
+                    //        tex = brickTexture;
+                    //    }
+
+                    //}
+                    //else if (field.Equals("SS"))
+                    //{
+                    //    tex = stoneTexture;
+                    //}
+                    //else if (field.Equals("WW"))
+                    //{
+                    //    tex = waterTexture;
+                    //}
+                    //else if (field.Equals("CC"))
+                    //{
+                    //    tex = coinTexture;
+                    //}
+                    //else if (field.Equals("LP"))
+                    //{
+                    //    tex = lifepackTexture;
+                    //}
+                    //else if (field.Equals("PP"))
+                    //{
+                    //    string subfield = m.ToString().Substring(2, 1);
+                    //    if (subfield.Equals("M"))
+                    //    {
+                    //        tex = tankTexture;
+                    //        DrawTank(gamegrid.mytank, tex);
+                    //    }
+                    //    else if (subfield.Equals("0"))
+                    //    {
+                    //        tex = op0Texture;
+                    //        DrawTank(gamegrid.TankList[0], tex);
+                    //    }
+                    //    else if (subfield.Equals("1"))
+                    //    {
+                    //        tex = op1Texture;
+                    //        DrawTank(gamegrid.TankList[1], tex);
+                    //    }
+                    //    else if (subfield.Equals("2"))
+                    //    {
+                    //        tex = op2Texture;
+                    //        DrawTank(gamegrid.TankList[2], tex);
+                    //    }
+                    //    else if (subfield.Equals("3"))
+                    //    {
+                    //        tex = op3Texture;
+                    //        DrawTank(gamegrid.TankList[3], tex);
+                    //    }
+                    //    else if (subfield.Equals("4"))
+                    //    {
+                    //        tex = op4Texture;
+                    //        DrawTank(gamegrid.TankList[4], tex);
+                    //    }
+                    //    Console.WriteLine("Subfield---------------------" + subfield+" m======"+m);
+                    //    continue;
+                    //}
+                    //else
+                    //{
+                    //    tex = cellTexture;
+                    //}
                     spriteBatch.Draw(tex, mpos, Color.White);
                 }
             }

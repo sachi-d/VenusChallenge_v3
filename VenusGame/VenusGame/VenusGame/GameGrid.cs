@@ -186,17 +186,19 @@ namespace VenusGame
             int LT = Int32.Parse(lpDetails[2]);
             LifePack l = new LifePack(lp_x, lp_y, LT);
             processLifeTime(l);
-            this.gameGrid[lp_x, lp_y] = l;
+            //this.gameGrid[lp_x, lp_y] = l;
         }
         public void processLifeTime(LifePack en)
         {
+            this.gameGrid[en.getX(), en.getY()] = en;
+
             disTimer = new System.Timers.Timer();
             disTimer.Elapsed += (source, e) => OnTimedEvent(source, e, en);
 
             disTimer.Interval = en.getLifeTime();
 
             disTimer.Enabled = true;
-            //timer.Elapsed = new ElapsedEventHandler();
+           // timer.Elapsed = new ElapsedEventHandler();
         }
         private void OnTimedEvent(object source, ElapsedEventArgs e, LifePack p)
         {
@@ -270,12 +272,12 @@ namespace VenusGame
             {
                 res=respondCommands(message);
             }
-            Console.WriteLine("----------------" + message + "-----------------");
+            //Console.WriteLine("----------------" + message + "-----------------");
             this.displayGrid();
             return res;
         }
 
-        public String respondCommands(String x)
+        public string respondCommands(String x)
         {
             String respond;
             x = x.Split('#')[0];

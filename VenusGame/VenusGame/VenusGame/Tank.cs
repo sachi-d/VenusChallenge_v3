@@ -116,7 +116,9 @@ namespace VenusGame
             }
             if (!(prex < 0 || prex > 9 || prey > 9 || prey < 0))
             {
-                grid.GetGrid()[prex, prey] = new GameEntity();   //celltexture
+                if(x!=newx || y!=newy){
+                    grid.GetGrid()[prex, prey] = new GameEntity();   //celltexture
+                }
             }
             x = newx;
             y = newy;
