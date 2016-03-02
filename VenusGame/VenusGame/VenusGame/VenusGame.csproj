@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AI.cs" />
+    <Compile Include="AI_trial.cs" />
     <Compile Include="Brick.cs" />
     <Compile Include="Client2.cs">
       <SubType>Form</SubType>

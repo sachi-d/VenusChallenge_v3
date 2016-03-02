@@ -34,14 +34,15 @@ namespace VenusGame
             game = new Game1();
             using (game)
             {
-                game.Run();
+                while (!game.Gamegrid.getisStarted())
+                {
 
+                }
+                game.Run();
+                
             }
         }
-        private void startAI()
-        {
-            //ai.TimeElapsed(sender,evt);
-        }
+
         public void StartForm()
         {
             Application.EnableVisualStyles();

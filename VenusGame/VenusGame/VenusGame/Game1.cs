@@ -65,6 +65,7 @@ namespace VenusGame
         int cellcount;
 
         int upcount = 0;
+        
 
 
         public Game1()
@@ -76,6 +77,7 @@ namespace VenusGame
             cellcount = gamegrid.size;
             topBoundary = (screenHeight - (cellcount * cellsize)) / 2;
             leftBoundary = (screenWidth - (cellcount * cellsize)) / 2;
+            
             //clientconnection = cli;
 
         }

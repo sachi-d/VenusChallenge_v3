@@ -29,7 +29,9 @@ namespace VenusGame
         Thread send_thread;
         Game1 game;
         AI aiNew;
+        AI_trial trialAI;
         bool isAIMode;
+        //bool started;
         public Client2()
         {
             InitializeComponent();
@@ -212,9 +214,16 @@ namespace VenusGame
             button1.Enabled = false;
             if (isAIMode)
             {
-                aiNew = new AI(game, this);
+                trialAI = new AI_trial(game, this);
+                //aiNew = new AI(game, this);
                 checkBox1.Enabled = false;
                 this.Visible = false;
+            }
+            else
+            {
+                this.ClientSize = new System.Drawing.Size(100, 30);
+                this.TopMost = true;
+                //this.position
             }
             
         }

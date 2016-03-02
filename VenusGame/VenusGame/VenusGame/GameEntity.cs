@@ -24,11 +24,11 @@ namespace VenusGame
         {
             playerName = "CELL";
         }
-        public GameEntity(int p, int q)
+        public GameEntity returnObj(int p, int q)
         {
             this.x = p;
             this.y = q;
-            //return this;
+            return this;
         }
         public int getX()
         {

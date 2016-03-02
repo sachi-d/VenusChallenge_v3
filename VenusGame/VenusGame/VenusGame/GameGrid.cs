@@ -20,6 +20,7 @@ namespace VenusGame
         Timer disTimer;
         int x;
         int y;
+        bool isStarted=false;
         internal List<Tank> TankList
         {
             get { return tankList; }
@@ -67,8 +68,13 @@ namespace VenusGame
             return this.gameGrid;
         }
 
+        public bool getisStarted()
+        {
+            return isStarted;
+        }
         public void setMapDetails(String m) //add received map data in to the game grid
         {
+            isStarted = true;
             m = m.Remove(m.Length - 2);
             string[] mapDetails = new string[5];
             mapDetails = m.Split(':');
