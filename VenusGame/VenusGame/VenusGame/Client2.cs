@@ -31,7 +31,7 @@ namespace VenusGame
         AI aiNew;
         AI_trial trialAI;
         bool isAIMode;
-        //bool started;
+        public bool started=false;
         public Client2()
         {
             InitializeComponent();
@@ -109,7 +109,13 @@ namespace VenusGame
                         //grid.readServerMessage(reply);
 
                         game.readMessage(reply);
+                        Console.WriteLine("-----" + reply.Substring(0) + "-------");
 
+                        if (reply.Substring(0,1).Equals("S"))
+                        {
+                            started = true;
+                            Console.WriteLine(reply.Substring(0).Equals("S")+"---------");
+                        }
                     }
                 }
             }
@@ -191,8 +197,8 @@ namespace VenusGame
             else if (keyData == Keys.Space)
             {
                 x = "SHOOT#";
-                game.setShooting(true);
-                game.DrawBullets();
+                //game.setShooting(true);
+                //game.DrawBullets();
             }
 
             if (!x.Equals("null"))

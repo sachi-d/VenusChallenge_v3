@@ -28,7 +28,7 @@ namespace VenusGame
         bool county;
         String previous;
         String h;
-        int firstTime;
+        
         Boolean finish;
         public AI(Game1 g, Client2 cli)
         {
@@ -51,7 +51,7 @@ namespace VenusGame
             score = 0;
             county = true;
             finish = false;
-            firstTime = 1;
+            
             cell = new GameEntity();
             Random rnd = new Random();
         }
@@ -81,9 +81,7 @@ namespace VenusGame
 
         public void TimeElapsed(Object sender, ElapsedEventArgs eventArgs)
         {
-            if ((finish) || (firstTime == 1))
-            {
-                firstTime++;
+           
                 if (county)
                 {
                     List<GameEntity> result = new List<GameEntity>();
@@ -165,12 +163,10 @@ namespace VenusGame
                 else
                 {
                     client.SendData(previous);
+                    Console.WriteLine(previous);
                 }
-            }
-            else
-            {
-
-            }
+            
+            
         }
         public List<GameEntity> Children()
         {
@@ -223,15 +219,10 @@ namespace VenusGame
         {
             final = new List<GameEntity>();
             GameEntity cellprev = new GameEntity();
-            int bestScore = 0;
-            if (firstTime == 1)
-            {
-                cellprev = null;
-            }
-            else
-            {
-                cellprev = cell;
-            }
+            int bestScore = -99999999;
+           
+            cellprev = cell;
+            
             final.Add(cellprev);
 
             List<GameEntity> ne;
@@ -504,3 +495,17 @@ namespace VenusGame
 
 
 }
+
+
+
+
+
+
+
+
+
+
+//----------------------------------------------------------------------
+
+
+
