@@ -9,12 +9,15 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Timers;
+//using System.Threading.Timer;
 using System.Windows.Forms;
 
 namespace VenusGame
 {
     public partial class Client2 : Form
     {
+        int shootcount=0;
         private NetworkStream clientStream; //Stream - outgoing
         private TcpClient client; //To talk back to the client
         private BinaryWriter writer; //To write to the clients
@@ -25,24 +28,30 @@ namespace VenusGame
 
         int serverPort = 6000;
         int clientPort = 7000;
+        string sendMessage;
         Thread receive_thread;
         Thread send_thread;
         Game1 game;
         AI aiNew;
         AI_trial trialAI;
+        public bool count;
         bool isAIMode;
-        public bool started=false;
+        int c;
+        public bool started = false;
+        System.Windows.Forms.Timer tim;
         public Client2()
         {
             InitializeComponent();
             isAIMode = false;
+            count = true;
+            c = 0;
 
         }
         public void SetGame(Game1 g)
         {
             game = g;
         }
-     
+
         public void startRecieve()
         {
             receive_thread = new Thread(new ThreadStart(ReceiveData));
@@ -61,7 +70,7 @@ namespace VenusGame
             try
             {
                 //Creating listening Socket
-                this.listener = new TcpListener(IPAddress.Parse("127.0.0.1"), clientPort);
+                this.listener = new TcpListener(IPAddress.Any, clientPort);
                 //Starts listening
                 this.listener.Start();
                 //Establish connection upon client request
@@ -93,7 +102,7 @@ namespace VenusGame
                         int port = 100;
                         try
                         {
-                            string ss = reply.Substring(0, reply.IndexOf(";"));
+                            //string ss = reply.Substring(0, reply.IndexOf(";"));
                             //Console.WriteLine(ss+" dsdsdsdsdsds");
                             //port = Convert.ToInt32(ss);
                         }
@@ -108,13 +117,37 @@ namespace VenusGame
                         // ThreadPool.QueueUserWorkItem(new WaitCallback(Program.Resolve),message);
                         //grid.readServerMessage(reply);
 
+
                         game.readMessage(reply);
                         Console.WriteLine("-----" + reply.Substring(0) + "-------");
 
-                        if (reply.Substring(0,1).Equals("S"))
+                        if (reply.Substring(0, 1).Equals("S"))
                         {
                             started = true;
-                            Console.WriteLine(reply.Substring(0).Equals("S")+"---------");
+                            Console.WriteLine(reply.Substring(0).Equals("S") + "---------");
+
+                        }
+                        if (reply.Substring(0, 1).Equals("G"))
+                        {
+
+                            if (isAIMode)
+                            {
+                                SendData(sendMessage);
+                                //if (sendMessage.Equals("SHOOT#"))
+                                //{
+                                //    shootcount = 1;
+                                //    tim = new System.Windows.Forms.Timer();
+                                //    tim.Interval = 333;
+                                //    tim.Tick += tim_Tick;
+                                //    tim.Start();
+                                //}
+                                count = false;
+                            }
+                            if (!count)
+                            {
+
+                                updateSendMessage("SHOOT#");
+                            }
                         }
                     }
                 }
@@ -134,6 +167,21 @@ namespace VenusGame
             }
         }
 
+        void tim_Tick(object sender, EventArgs e)
+        {
+            SendData("SHOOT#");
+            shootcount++;
+            if (shootcount == 3)
+            {
+                tim.Stop();
+            }
+        }
+
+        public void updateSendMessage(string msg)
+        {
+            sendMessage = msg;
+        }
+
         public void SendData(string x)
         {
             //DataObject dataObj = (DataObject)stateInfo;
@@ -144,7 +192,7 @@ namespace VenusGame
             {
 
 
-                this.client.Connect(IPAddress.Parse("127.0.0.1"), serverPort);
+                this.client.Connect(IPAddress.Parse("192.168.1.100"), serverPort);  //192.168.1.100
 
                 if (this.client.Connected)
                 {
@@ -197,8 +245,8 @@ namespace VenusGame
             else if (keyData == Keys.Space)
             {
                 x = "SHOOT#";
-                //game.setShooting(true);
-                //game.DrawBullets();
+                game.setShooting(true);
+                game.DrawBullets();
             }
 
             if (!x.Equals("null"))
@@ -231,7 +279,7 @@ namespace VenusGame
                 this.TopMost = true;
                 //this.position
             }
-            
+
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -248,11 +296,11 @@ namespace VenusGame
 
         private void button2_Click(object sender, EventArgs e)
         {
-          //  Process.Start("http://venuschallenge.esy.es/");
+            //  Process.Start("http://venuschallenge.esy.es/");
             System.Diagnostics.Process.Start("http://venuschallenge.esy.es/");
         }
 
-      
+
 
     }
 }

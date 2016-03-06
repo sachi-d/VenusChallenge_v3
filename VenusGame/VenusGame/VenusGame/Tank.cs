@@ -231,8 +231,30 @@ namespace VenusGame
                 setDirection(todirection);
             }
         }
-        
 
+        public void setwhethershot(int d)
+        {
+            if (d > 0)
+            {
+                whetherShot = true;
+            }
+            else
+            {
+                whetherShot = false;
+            }
+        }
+        public void setHealth(int healthd)
+        {
+            this.health = healthd;
+        }
+        public void setCoins(int coinsd)
+        {
+            this.coins = coinsd;
+        }
+        public void setPoints(int pointsd)
+        {
+            this.points = pointsd;
+        }
         public override string ToString()
         {
             return "PP" + playerName;
@@ -293,6 +315,19 @@ namespace VenusGame
         public override string ToString()
         {
             return "PPMY";
+        }
+
+        public int getCoins()
+        {
+            return this.coins;
+        }
+        public int getPoints()
+        {
+            return this.points;
+        }
+        public int getHealth()
+        {
+            return this.health;
         }
 
     }

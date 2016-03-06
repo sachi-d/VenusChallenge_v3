@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
+
 using System.Windows.Forms;
 
 namespace VenusGame
@@ -45,6 +45,12 @@ namespace VenusGame
         Texture2D op4Texture;
         Texture2D bulletTexture;
         SpriteFont font1;
+        private Texture2D container, lifebar;
+        private Vector2 barposition;
+        int fullhealth;
+        int currenthealth;
+        int coins;
+        int points;
 
         int screenWidth = 1200; //FIXED BACKGROUND WIDTH
         int screenHeight = 675;   //FIXED BACKGROUNDHEIGHT
@@ -56,7 +62,7 @@ namespace VenusGame
         GameGrid gamegrid;
         Vector2 rotationpoint = new Vector2(30, 30);
         String displayText = " ";
-
+       
         internal GameGrid Gamegrid
         {
             get { return gamegrid; }
@@ -128,6 +134,13 @@ namespace VenusGame
             op4Texture = Content.Load<Texture2D>("op4");
             bulletTexture = Content.Load<Texture2D>("bullet");
             font1 = Content.Load<SpriteFont>("Myfont");
+            container = Content.Load<Texture2D>("healthbar");
+            lifebar = Content.Load<Texture2D>("healthmanage");
+
+            barposition = new Vector2(920, 30);
+            fullhealth = 205;
+            coins = 0;
+            points = 0;
             //gamegrid.mytank.angle = 0;
             //screenWidth = device.PresentationParameters.BackBufferWidth;
             //screenHeight = device.PresentationParameters.BackBufferHeight;
@@ -152,6 +165,8 @@ namespace VenusGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            Updatehealthbar();
+           
             if (upcount == 30)
             {
                 upcount = 0;
@@ -178,8 +193,10 @@ namespace VenusGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
             DrawScenery();
+            DrawHealthbar();
             DrawCells();
             DrawText();
+            
             //DrawBullets();
             //DrawBars();
 
@@ -188,7 +205,22 @@ namespace VenusGame
 
             base.Draw(gameTime);
         }
+        private void Updatehealthbar()
+        {
+            int heal = gamegrid.mytank.getHealth();
+            coins = gamegrid.mytank.getCoins();
+            points = gamegrid.mytank.getPoints();
+            currenthealth = fullhealth * heal / 100;
+        }
 
+        private void DrawHealthbar()
+        {
+            
+            //Rectangle screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
+            spriteBatch.Draw(container, barposition, Color.White);
+            spriteBatch.Draw(lifebar, new Rectangle((int)barposition.X+18+currenthealth, (int)barposition.Y+25, fullhealth-currenthealth, 33), Color.White);
+            
+        }
         private void DrawTank(Tank t, Texture2D tex)
         {
             Vector2 position = new Vector2(t.x * cellsize + leftBoundary + cellsize / 2, t.y * cellsize + topBoundary + cellsize / 2);
@@ -201,6 +233,8 @@ namespace VenusGame
         private void DrawText()
         {
             spriteBatch.DrawString(font1, displayText, new Vector2(29, 595), Color.Black);
+            spriteBatch.DrawString(font1, "Coins : "+coins.ToString(), new Vector2(barposition.X+70, barposition.Y+95), Color.Black);
+            spriteBatch.DrawString(font1, "Points: " + points.ToString(), new Vector2(barposition.X+70, barposition.Y + 125), Color.Black);
             //spriteBatch.DrawString(font, "Cannon power: 100", new Vector2(20, 45), Color.White);
         }
         public void readMessage(String m)
@@ -211,7 +245,7 @@ namespace VenusGame
         private void DrawScenery()
         {
             Rectangle screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
-            spriteBatch.Draw(backgroundTexture, screenRectangle, Color.White);
+            spriteBatch.Draw(backgroundTexture, new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
             spriteBatch.Draw(foregroundTexture, screenRectangle, Color.White);
         }
 

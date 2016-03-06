@@ -89,7 +89,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Sachi\Documents\GitHub\VenusChallenge_v3\VenusGame\VenusGame\VenusGame\bin\x86\Debug\Content\foreground.xnb</Output>
-      <Time>2015-12-07T22:14:57.6922153+05:30</Time>
+      <Time>2016-03-03T18:50:52.4051453+05:30</Time>
     </Item>
     <Item>
       <Source>lifepack.png</Source>
@@ -152,7 +152,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Sachi\Documents\GitHub\VenusChallenge_v3\VenusGame\VenusGame\VenusGame\bin\x86\Debug\Content\stone.xnb</Output>
-      <Time>2015-12-07T22:14:57.6922153+05:30</Time>
+      <Time>2016-03-02T18:02:11.3930625+05:30</Time>
     </Item>
     <Item>
       <Source>tank.png</Source>
@@ -180,6 +180,24 @@
       <Options>None</Options>
       <Output>C:\Users\Sachi\Documents\GitHub\VenusChallenge_v3\VenusGame\VenusGame\VenusGame\bin\x86\Debug\Content\Myfont.xnb</Output>
       <Time>2015-11-20T15:29:15.4543825+05:30</Time>
+    </Item>
+    <Item>
+      <Source>healthbar.png</Source>
+      <Name>healthbar</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Sachi\Documents\GitHub\VenusChallenge_v3\VenusGame\VenusGame\VenusGame\bin\x86\Debug\Content\healthbar.xnb</Output>
+      <Time>2016-03-03T20:38:03.4009292+05:30</Time>
+    </Item>
+    <Item>
+      <Source>healthmanage.png</Source>
+      <Name>healthmanage</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Sachi\Documents\GitHub\VenusChallenge_v3\VenusGame\VenusGame\VenusGame\bin\x86\Debug\Content\healthmanage.xnb</Output>
+      <Time>2016-03-03T19:48:24.1267513+05:30</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>

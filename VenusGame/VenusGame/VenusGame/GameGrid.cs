@@ -15,7 +15,7 @@ namespace VenusGame
         List<string> bricks = new List<string>();
         List<string> stones = new List<string>();
         List<string> water = new List<string>();
-        List<Tank> tankList = new List<Tank>();
+        public List<Tank> tankList = new List<Tank>();
 
         Timer disTimer;
         int x;
@@ -127,7 +127,7 @@ namespace VenusGame
         {
             updatedValues = updatedValues.Remove(updatedValues.Length - 2);
             string[] c = updatedValues.Split(':');
-            //Console.Write(updatedValues);
+            Console.Write(updatedValues);
             //Console.WriteLine("damage levs- " + c[c.Length - 1]);
             updateDamages(c[c.Length - 1]);
             // IDictionary<string, Tank> col = new Dictionary<string, Tank>();
@@ -139,7 +139,10 @@ namespace VenusGame
                 tankList[i].setPlayerDigit(i);
                 tankList[i].setDirection(Int32.Parse(cl[2]));
                 tankList[i].setGridLocation(x, y);
-
+                tankList[i].setwhethershot(Int32.Parse(cl[3]));
+                tankList[i].setHealth(Int32.Parse(cl[4]));
+                tankList[i].setCoins(Int32.Parse(cl[5]));
+                tankList[i].setPoints(Int32.Parse(cl[6]));
             }
             tankList.ToArray();
         }

@@ -8,57 +8,44 @@ namespace VenusGame
 {
     class AI_trial
     {
-        public bool gameOver = false;
+
         Client2 client;
         private Timer disTimer;
         Timer start;
         GameGrid grid;
-        int count;
         int score;
-
         int scoreChild;
         Tank tank;
         GameEntity cell;
         List<GameEntity> children;
-        List<GameEntity> tankList;
-        List<GameEntity> emptyCells;
+        List<Tank> tankList;
+
         List<GameEntity> final;
-        Random rnd;
         bool county;
         String previous;
-        String h;
-        int firstTime;
-        Boolean finish;
+        String shoot;
+        bool breakk;
+        int count;
+        int m;
         public AI_trial(Game1 g, Client2 cli)
         {
 
-            //this._pingTimer = new Timer();
-            //this._pingTimer.Interval = 200;
-            //this._pingTimer.Elapsed += new ElapsedEventHandler(this.TimeElapsed);
 
-            ////trial run
-            ////   this._pingTimer.Elapsed += new ElapsedEventHandler(this.TrialRun);
-
-
-            //this._pingTimer.Enabled = true;
             start = new Timer();
             start.Elapsed += start_Elapsed;
-            start.Interval = 5000;
+            start.Interval = 50;
             start.Enabled = true;
-
-
-
             this.client = cli;
-
             setGrid(g.Gamegrid);
             tank = grid.mytank;
-            count = 0;
             score = 0;
+            m = 0;
             county = true;
-            finish = false;
-            firstTime = 1;
+            breakk = true;
+            shoot = "";
             cell = new GameEntity();
             Random rnd = new Random();
+            count = 0;
         }
 
         void start_Elapsed(object sender, ElapsedEventArgs e)
@@ -84,54 +71,54 @@ namespace VenusGame
         {
             disTimer = new System.Timers.Timer();
             disTimer.Elapsed += disTimer_Elapsed;
-
-            disTimer.Interval = 999;
-
+            disTimer.Interval = 2500;
             disTimer.Enabled = true;
 
         }
-        //void isTimer_Elapsed(object sender, ElapsedEventArgs e)
-        //{
-        //    Console.WriteLine("Timer - " + count);
-        //    count++;
-        //    client.SendData("RIGHT#");
-        //}
+
         public void disTimer_Elapsed(Object sender, ElapsedEventArgs eventArgs)
         {
+            client.count = true;
+            // disTimer.Stop();
+            if (shoot != null)
+            {
 
-            if (county)
+                client.updateSendMessage(shoot);
+                shoot = null;
+            }
+            else if (county)
             {
                 List<GameEntity> result = new List<GameEntity>();
                 result = GetBestScore();
 
-                if ((result[0].x.Equals(result[1].x)) && (result[0].y < result[1].y))
+                if ((result[0].x.Equals(result[1].x)) && (result[0].y > result[1].y))
                 {
                     if (tank.direction == 0)
                     {
                         county = true;
                         previous = null;
-                        client.SendData("UP#");
+                        client.updateSendMessage("UP#");
                     }
                     else
                     {
                         county = false;
                         previous = "UP#";
-                        client.SendData("UP#");
+                        client.updateSendMessage("UP#");
                     }
                 }
-                else if ((result[0].x.Equals(result[1].x)) && (result[0].y > result[1].y))
+                else if ((result[0].x.Equals(result[1].x)) && (result[0].y < result[1].y))
                 {
                     if (tank.direction == 1)
                     {
                         county = true;
                         previous = null;
-                        client.SendData("DOWN#");
+                        client.updateSendMessage("DOWN#");
                     }
                     else
                     {
                         county = false;
                         previous = "DOWN#";
-                        client.SendData("DOWN#");
+                        client.updateSendMessage("DOWN#");
                     }
                 }
                 else if ((result[0].y.Equals(result[1].y)) && (result[0].x < result[1].x))
@@ -140,13 +127,13 @@ namespace VenusGame
                     {
                         county = true;
                         previous = null;
-                        client.SendData("RIGHT#");
+                        client.updateSendMessage("RIGHT#");
                     }
                     else
                     {
                         county = false;
                         previous = "RIGHT#";
-                        client.SendData("RIGHT#");
+                        client.updateSendMessage("RIGHT#");
 
                     }
                 }
@@ -156,35 +143,26 @@ namespace VenusGame
                     {
                         county = true;
                         previous = null;
-                        client.SendData("LEFT#");
+                        client.updateSendMessage("LEFT#");
                     }
                     else
                     {
                         county = false;
                         previous = "LEFT#";
-                        client.SendData("LEFT#");
-
+                        client.updateSendMessage("LEFT#");
                     }
                 }
-
-
-
-
-                Console.WriteLine(tank.x + " " + tank.y);
-
-                //     grid.GetGrid()[cell.x, cell.y] = tank;
-                //    grid.GetGrid()[cell.x, cell.y] = tank;
-
-                //   Console.WriteLine(this.Iterate(startNode, int.MaxValue, int.MinValue, MaxPlayer)+"Final Score");
             }
             else
             {
-                client.SendData(previous);
-                Console.WriteLine(previous);
+                client.updateSendMessage(previous);
+                Console.WriteLine("Previous - " + previous + "..............");
+                previous = null;
+                county = true;
             }
-
-
         }
+
+
         public List<GameEntity> Children()
         {
             for (int i = 0; i < 9999999999999999; i++)
@@ -196,271 +174,190 @@ namespace VenusGame
             }
             grid.displayGrid();
             children = new List<GameEntity>();
-            tankList = new List<GameEntity>();
-            emptyCells = new List<GameEntity>();
+            tankList = new List<Tank>();
+            tankList = grid.tankList;
+
+
+
+
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
 
-                    if ((grid.GetGrid()[i, j].ToString().Equals("CELL")) || (grid.GetGrid()[i, j].ToString().Equals("LP")) || (grid.GetGrid()[i, j].ToString().Equals("CC")))
+
+                    if ((i == grid.mytank.x && j == grid.mytank.y - 1) || (i == grid.mytank.x + 1 && j == grid.mytank.y) || (i == grid.mytank.x && j == grid.mytank.y + 1) || (i == grid.mytank.x - 1 && j == grid.mytank.y))
                     {
-                        if ((i == grid.mytank.x && j == grid.mytank.y - 1) || (i == grid.mytank.x + 1 && j == grid.mytank.y) || (i == grid.mytank.x && j == grid.mytank.y + 1) || (i == grid.mytank.x - 1 && j == grid.mytank.y))
+                        if ((grid.GetGrid()[i, j].ToString().Equals("CELL")) || (grid.GetGrid()[i, j].ToString().Equals("LP")) || (grid.GetGrid()[i, j].ToString().Equals("CC")))
                         {
 
                             Console.WriteLine(grid.GetGrid()[i, j].returnObj(i, j).x + " " + grid.GetGrid()[i, j].returnObj(i, j).y + "child");
                             children.Add(grid.GetGrid()[i, j].returnObj(i, j));
                         }
 
-                        emptyCells.Add(grid.GetGrid()[i, j].returnObj(i, j));
+
 
                     }
-                    else if (grid.GetGrid()[i, j].ToString().Substring(0, 2).Equals("PP"))
-                    {
-                        tankList.Add(grid.GetGrid()[i, j].returnObj(i, j));
-                    }
-                    else
-                    {
 
-                    }
 
                 }
                 // Console.WriteLine("\n");
             }
-
-
             return children;
         }
 
         public List<GameEntity> GetBestScore()
         {
+            int count = 0;
+            bool val = true;
+            int h = 0;
+            int d = 0;
             final = new List<GameEntity>();
             GameEntity cellprev = new GameEntity();
-            int bestScore = -99999999;
-
+            int bestScore = 0;
             cellprev = cell;
-
             final.Add(cellprev);
-
             List<GameEntity> ne;
+            List<int> me = new List<int>();
             ne = Children();
-            for (int o = 0; o < ne.Count; o++)
-            {
-                Console.WriteLine("Childreb+" + ne[o].playerName + " " + ne.Count);
-            }
-
             for (int i = 0; i < ne.Count; i++)
             {
                 int totalScore = 0;
-                Console.WriteLine(i + "  ");
+                //    Console.WriteLine(i + "  ");
                 totalScore = evaluateScore(ne[i]);
                 Console.WriteLine("total score" + totalScore);
-                if (bestScore < totalScore)
+                if (totalScore == -10000)
                 {
+                    // val = false;
+                    //   shoot = "SHOOT#";
                     bestScore = totalScore;
                     cell = ne[i];
-                    Console.WriteLine(ne[i].x + "  x " + ne[i].y);
-
+                    break;
                 }
-
-
+                else if (totalScore == 1000)
+                {
+                    count++;
+                    bestScore = totalScore;
+                    cell = ne[i];
+                    Console.WriteLine("current best score" + ne[i].x + "  x " + ne[i].y);
+                    break;
+                }
+                else if (totalScore == 750)
+                {
+                    count++;
+                    bestScore = totalScore;
+                    cell = ne[i];
+                    Console.WriteLine("current best score" + ne[i].x + "  x " + ne[i].y);
+                    break;
+                }
+                else if (totalScore > bestScore)
+                {
+                    count++;
+                    bestScore = totalScore;
+                    cell = ne[i];
+                    me.Add(i);
+                    Console.WriteLine("current best score" + ne[i].x + "  x " + ne[i].y);
+                    //  break;
+                }
+                else if (totalScore == bestScore)
+                {
+                    me.Add(i);
+                    Random rnd = new Random();
+                    m = rnd.Next(0, me.Count);
+                    cell = ne[m];
+                }
+                
             }
-            score = bestScore;
-            //if ((cell.x.Equals(cellprev.x)) && (cell.y.Equals(cellprev.y)))
-            //{
-            //    Console.WriteLine("Blah Blah Blah");
-            //    int r = rnd.Next(ne.Count);
-            //    cell = ne[r];
-            //    score = 500;
-            //}
 
+            score = bestScore;
             final.Add(cell);
             Console.WriteLine("best score" + bestScore);
-            finish = true;
             return final;
-
         }
+
+
         public int evaluateScore(GameEntity node)
         {
-            count = 0;
+
             scoreChild = 0;
-
-
-            for (int i = 0; i < 10; i++)
+            if (count == 0)
             {
-                for (int j = 0; j < 10; j++)
+                foreach (GameEntity c in tankList)
                 {
-                    Console.WriteLine("tank.x" + tank.x + " " + "tank.y" + tank.y + "node.x" + node.x + " " + "node.y" + node.y);
-                    foreach (GameEntity c in tankList)
+                    if (tank.x == c.x)
                     {
-                        if (node.x == c.x || node.y == c.y)
-                        {
 
-                            scoreChild -= 1000;     //int possibleDeath=1000;  
+                        if (((tank.y > c.y) && (tank.direction == 1)) || ((tank.y < c.y) && (tank.direction == 0)))
+                        {
+                            scoreChild = -10000;
+                            shoot = "SHOOT#";
+                            break;
                         }
-
-
-                    }
-                    if (emptyCells.Contains(grid.GetGrid()[i, j].returnObj(i, j)) && grid.GetGrid()[i, j].returnObj(i, j).GetType() != typeof(MyTank))
-                    {
-                        if ((i == node.x && j == node.y))
+                        else if ((tank.y > c.y))
                         {
+                            scoreChild = -10000;
 
-                            if (grid.GetGrid()[i, j].GetType() == typeof(LifePack))
-                            {
-                                scoreChild += 800;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Coin))
-                            {
-                                scoreChild += 750;
-                            }
-                            else
-                            {
-                                scoreChild += 700;
-                            }
+                            shoot = "UP#";
+                            Console.WriteLine("Mytank-" + tank.y + "other y" + c.y + shoot);
+                            break;
                         }
-
-
-                        else if ((i <= node.x + 1 && i >= node.x - 1) || (j <= node.y + 1 && j >= node.y - 1))
+                        else if ((tank.y < c.y))
                         {
-
-                            if (grid.GetGrid()[i, j].GetType() == typeof(LifePack))
-                            {
-                                scoreChild += 770;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Coin))
-                            {
-                                scoreChild += 730;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Water))
-                            {
-                                scoreChild -= 700;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Brick))
-                            {
-                                scoreChild -= 230;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Stone))
-                            {
-                                scoreChild -= 230;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(MyTank))
-                            {
-                                scoreChild -= 700;
-                            }
-
-                            else
-                            {
-                                scoreChild += 600;
-                            }
-                        }
-
-                        else if ((i <= node.x + 2 && i >= node.x - 2) || (j <= node.y + 2 && j >= node.y - 2))
-                        {
-
-
-
-                            if (grid.GetGrid()[i, j].GetType() == typeof(LifePack))
-                            {
-                                scoreChild += 680;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Coin))
-                            {
-                                scoreChild += 630;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Water))
-                            {
-                                scoreChild -= 650;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Brick))
-                            {
-                                scoreChild -= 130;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Stone))
-                            {
-                                scoreChild -= 130;
-                            }
-                            else
-                            {
-                                scoreChild += 500;
-                            }
-
-                        }
-                        //else if ((i <= node.x + 3 && i >= node.x - 3) || (j <= node.y + 3 && j >= node.y - 3))
-                        //{
-
-
-                        //    if (grid.GetGrid()[i, j].GetType() == typeof(LifePack))
-                        //    {
-                        //        scoreChild += 580;
-                        //    }
-                        //    else if (grid.GetGrid()[i, j].GetType() == typeof(Coin))
-                        //    {
-                        //        scoreChild += 540;
-                        //    }
-                        //    else if (grid.GetGrid()[i, j].GetType() == typeof(Water))
-                        //    {
-                        //        scoreChild -= 530;
-                        //    }
-                        //    else if (grid.GetGrid()[i, j].GetType() == typeof(Brick))
-                        //    {
-                        //        scoreChild -= 40;
-                        //    }
-                        //    else if (grid.GetGrid()[i, j].GetType() == typeof(Stone))
-                        //    {
-                        //        scoreChild -= 40;
-                        //    }
-                        //    else
-                        //    {
-                        //        scoreChild += 400;
-                        //    }
-
-
-                        //}
-
-                        else
-                        {
-
-
-                            if (grid.GetGrid()[i, j].GetType() == typeof(LifePack))
-                            {
-                                scoreChild += 480;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Coin))
-                            {
-                                scoreChild += 420;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Water))
-                            {
-                                scoreChild -= 430;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Brick))
-                            {
-                                scoreChild += 80;
-                            }
-                            else if (grid.GetGrid()[i, j].GetType() == typeof(Stone))
-                            {
-                                scoreChild += 80;
-                            }
-                            else
-                            {
-                                scoreChild += 300;
-                            }
+                            scoreChild = -10000;
+                            shoot = "DOWN#";
+                            Console.WriteLine("Mytank-" + tank.y + "other y" + c.y + shoot);
+                            break;
                         }
                     }
-                    else
+                    if (tank.y == c.y)
                     {
-                        scoreChild -= 2000;
+
+                        if (((tank.x > c.x) && (tank.direction == 3)) || ((tank.x < c.x) && (tank.direction == 2)))
+                        {
+                            scoreChild = -10000;
+                            shoot = "SHOOT#";
+                            break;
+                        }
+                        else if ((tank.x > c.x))
+                        {
+                            scoreChild = -10000;
+                            shoot = "LEFT#";
+                            Console.WriteLine("Mytank-" + tank.x + "other x" + c.x + shoot);
+                            break;
+                        }
+                        else if ((tank.x < c.x))
+                        {
+                            scoreChild = -10000;
+                            shoot = "RIGHT#";
+                            Console.WriteLine("Mytank-" + tank.x + "other x" + c.x + shoot);
+                            break;
+                        }
                     }
-
-
-
-
                 }
+            }
 
-
+            if (grid.GetGrid()[node.x, node.y].GetType() == typeof(LifePack))
+            {
+                scoreChild += 1000;
 
             }
+            else if (grid.GetGrid()[node.x, node.y].GetType() == typeof(Coin))
+            {
+                scoreChild += 750;
+
+            }
+            else if (grid.GetGrid()[node.x, node.y].GetType() == typeof(GameEntity))
+            {
+                scoreChild += 500;
+
+            }
+            else
+            {
+                scoreChild -= 2000;
+
+            }
+
+
 
             Console.WriteLine("score child" + scoreChild);
             return scoreChild;
